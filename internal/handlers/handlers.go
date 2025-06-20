@@ -13,7 +13,7 @@ import (
 )
 
 func MainHandler(w http.ResponseWriter, r *http.Request) {
-	dir := filepath.Dir("handlers.go")
+	dir := filepath.Dir("index.html")
 	projectRoot := filepath.Join(dir, "..")
 	path, err := filepath.Abs(projectRoot)
 	path = filepath.Join(path, "index.html")
@@ -33,6 +33,7 @@ func MainHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	w.WriteHeader(http.StatusOK)
 }
 
 func UploadHandler(w http.ResponseWriter, r *http.Request) {
@@ -73,7 +74,7 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	log.Println("файл записан")
-	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(convertedData))
 	log.Println("---------------------------------")
