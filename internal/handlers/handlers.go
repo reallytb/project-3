@@ -13,16 +13,10 @@ import (
 )
 
 func MainHandler(w http.ResponseWriter, r *http.Request) {
-	dir := filepath.Dir("index.html")
-	projectRoot := filepath.Join(dir, "..")
-	path, err := filepath.Abs(projectRoot)
-	newPath := filepath.Join(path, "index.html")
-	if err != nil {
-		log.Println("ошибка определения пути html-документа")
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	file, err := os.Open(newPath)
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	basePath := filepath.Join("..", "..")
+	filePath := filepath.Join(basePath, "index.html")
+	file, err := os.Open(filePath)
 	if err != nil {
 		log.Println("ошибка открытия html-документа")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -35,8 +29,6 @@ func MainHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	w.WriteHeader(http.StatusOK)
 }
 
 func UploadHandler(w http.ResponseWriter, r *http.Request) {
