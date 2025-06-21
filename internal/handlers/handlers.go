@@ -14,21 +14,16 @@ import (
 
 func MainHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	basePath := filepath.Join("..", "..")
-	filePath := filepath.Join(basePath, "index.html")
-	file, err := os.Open(filePath)
+	dir := filepath.Dir("index.html")
+	projectRoot := filepath.Join(dir, "..")
+	path, err := filepath.Abs(projectRoot)
+	newPath := filepath.Join(path, "index.html")
 	if err != nil {
-		log.Println("ошибка открытия html-документа")
+		log.Println("ошибка определения пути html-документа")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	defer file.Close()
-	_, err = io.Copy(w, file)
-	if err != nil {
-		log.Println("ошибка копирования html-документа")
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	http.ServeFile(w, r, newPath)
 }
 
 func UploadHandler(w http.ResponseWriter, r *http.Request) {
