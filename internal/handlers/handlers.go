@@ -18,17 +18,20 @@ func MainHandler(w http.ResponseWriter, r *http.Request) {
 	path, err := filepath.Abs(projectRoot)
 	path = filepath.Join(path, "index.html")
 	if err != nil {
+		log.Println("ошибка определения пути html-документа")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	file, err := os.Open(path)
 	if err != nil {
+		log.Println("ошибка открытия html-документа")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	defer file.Close()
 	_, err = io.Copy(w, file)
 	if err != nil {
+		log.Println("ошибка копирования html-документа")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
