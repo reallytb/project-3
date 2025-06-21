@@ -16,13 +16,13 @@ func MainHandler(w http.ResponseWriter, r *http.Request) {
 	dir := filepath.Dir("index.html")
 	projectRoot := filepath.Join(dir, "..")
 	path, err := filepath.Abs(projectRoot)
-	path = filepath.Join(path, "index.html")
+	newPath := filepath.Join(path, "index.html")
 	if err != nil {
 		log.Println("ошибка определения пути html-документа")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	file, err := os.Open(path)
+	file, err := os.Open(newPath)
 	if err != nil {
 		log.Println("ошибка открытия html-документа")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
