@@ -39,12 +39,14 @@ func MainHandler(w http.ResponseWriter, r *http.Request) {
 func UploadHandler(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseMultipartForm(10 << 20)
 	if err != nil {
+		log.Println("ошибка парсинга")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	log.Println("Форма запарсилась")
 	file, header, err := r.FormFile("myFile")
 	if err != nil {
+		log.Println("ошибка получения файла из формы")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -52,6 +54,7 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 	defer file.Close()
 	fileBytes, err := io.ReadAll(file)
 	if err != nil {
+		log.Println("ошибка чтения файла")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -63,6 +66,7 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 		filepath.Ext(header.Filename))
 	newFile, err := os.Create(outputFilename)
 	if err != nil {
+		log.Println("ошибка создания файла")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -70,6 +74,7 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 	defer newFile.Close()
 	err = os.WriteFile(outputFilename, []byte(convertedData), 0755)
 	if err != nil {
+		log.Println("ошибка записи файла")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
